@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Full Page Screenshot with URL",
+  "version": "1.0",
+  "description": "Captures full webpage screenshot, includes URL, handles dynamic loading.",
+  "permissions": ["activeTab", "scripting", "downloads"],
+  "action": {
+    "default_icon": "icon.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
