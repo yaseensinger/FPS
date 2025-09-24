@@ -123,12 +123,17 @@
     canvas.height = fullHeight + 100;
     const ctx = canvas.getContext('2d');
 
+    // Set white background
+    console.log('Setting white background on canvas');
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
     // Draw URL and date
     console.log('Drawing URL and date on canvas');
     ctx.fillStyle = '#000';
     ctx.font = '16px Arial';
-    ctx.fillText(`URL: ${url}`, 10, 30);
-    ctx.fillText(`Captured on: ${captureDate}`, 10, 60);
+    ctx.fillText(`URL: ${url}`, 10, 20);
+    ctx.fillText(`Captured on: ${captureDate}`, 10, 40);
 
     // Draw captures
     console.log('Stitching captures');
