@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Screenshot Preview</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
+    h1 {
+      color: #333;
+    }
+    #preview {
+      max-width: 80%;
+      border: 2px solid #333;
+      margin: 20px auto;
+      display: block;
+    }
+    #downloadButton {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #0078d4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #downloadButton:hover {
+      background-color: #005ea2;
+    }
+  </style>
+</head>
+<body>
+  <button id="downloadButton">Download as PDF</button>
+  <h1>Screenshot Preview</h1>
+  <img id="preview" src="" alt="Screenshot Preview">
+
+
+  <script src="jspdf.min.js"></script>
+  <script src="preview.js"></script>
+</body>
+</html>

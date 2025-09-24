@@ -2,12 +2,18 @@
   "manifest_version": 3,
   "name": "Full Page Screenshot with URL",
   "version": "1.0",
-  "description": "Captures full webpage screenshot, includes URL, handles dynamic loading.",
+  "description": "Captures full webpage screenshot, includes URL and date, with PDF download preview.",
   "permissions": ["activeTab", "scripting", "downloads"],
   "action": {
     "default_icon": "icon.png"
   },
   "background": {
     "service_worker": "background.js"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["preview.html", "preview.js", "jspdf.min.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }

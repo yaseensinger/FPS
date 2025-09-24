@@ -4,7 +4,13 @@
     const originalScrollY = window.scrollY;
     const originalOverflow = document.documentElement.style.overflow;
     const url = window.location.href;
+    const captureDate = new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
     console.log('URL:', url);
+    console.log('Capture date:', captureDate);
     console.log('Original scroll position:', originalScrollY);
 
     // Temporarily hide scrollbars
@@ -84,7 +90,7 @@
       console.log(`Captured segment at y=${currentY}`);
       lastCapturedY = currentY;
 
-      // Restore navbars after capture (for next iteration or cleanup)
+      // Restore navbars after capture
       if (currentY > 0) {
         navbars.forEach((navbar, index) => {
           navbar.style.display = originalDisplayStyles[index] || '';
@@ -114,14 +120,15 @@
     console.log('Creating canvas for stitching');
     const canvas = document.createElement('canvas');
     canvas.width = viewportWidth;
-    canvas.height = fullHeight + 50;
+    canvas.height = fullHeight + 100;
     const ctx = canvas.getContext('2d');
 
-    // Draw URL
-    console.log('Drawing URL on canvas');
+    // Draw URL and date
+    console.log('Drawing URL and date on canvas');
     ctx.fillStyle = '#000';
     ctx.font = '16px Arial';
     ctx.fillText(`URL: ${url}`, 10, 30);
+    ctx.fillText(`Captured on: ${captureDate}`, 10, 60);
 
     // Draw captures
     console.log('Stitching captures');
@@ -136,31 +143,31 @@
         image.onerror = () => console.error(`Failed to load image at y=${y}`);
         image.src = dataUrl;
       });
-      const drawY = y + 50;
+      const drawY = y + 100;
       const cropHeight = (y + viewportHeight > fullHeight) ? (fullHeight - y) : viewportHeight;
       ctx.drawImage(img, 0, 0, viewportWidth, cropHeight, 0, drawY, viewportWidth, cropHeight);
     }
     console.log('Finished stitching');
 
-    // Send dataUrl to background for download
-    console.log('Sending dataUrl to background for download');
-    const finalDataUrl = canvas.toDataURL('image/png');
+    // Navigate to preview page
+    console.log('Sending dataUrl to background for navigation');
+    const finalDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+    console.log('Final dataUrl length:', finalDataUrl.length);
     await new Promise((resolve, reject) => {
       chrome.runtime.sendMessage({
-        type: 'download',
-        dataUrl: finalDataUrl,
-        filename: 'full-page-screenshot.png'
+        type: 'navigate',
+        dataUrl: finalDataUrl
       }, (response) => {
         if (chrome.runtime.lastError) {
-          console.error('Download error:', chrome.runtime.lastError.message);
+          console.error('Navigation error:', chrome.runtime.lastError.message);
           reject(chrome.runtime.lastError);
         } else {
-          console.log('Download response:', response);
+          console.log('Navigation response:', response);
           resolve(response);
         }
       });
     });
-    console.log('Download request sent');
+    console.log('Navigation request sent');
   } catch (error) {
     console.error('Error in captureFullPage:', error);
   }

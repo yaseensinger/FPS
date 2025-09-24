@@ -1,3 +1,5 @@
+let storedDataUrl = null;
+
 chrome.action.onClicked.addListener((tab) => {
   console.log('Action clicked, injecting content.js');
   chrome.scripting.executeScript({
@@ -14,11 +16,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         console.error('Background: Capture error:', chrome.runtime.lastError.message);
         sendResponse({ error: chrome.runtime.lastError.message });
       } else {
-        console.log('Background: Capture successful');
+        console.log('Background: Capture successful, dataUrl length:', dataUrl ? dataUrl.length : 0);
         sendResponse({ dataUrl });
       }
     });
-    return true; // Keep channel open for async response
+    return true;
   } else if (message.type === 'download') {
     console.log('Background: Received download request');
     chrome.downloads.download({
@@ -34,6 +36,25 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         sendResponse({ success: true });
       }
     });
-    return true; // Keep channel open for async response
+    return true;
+  } else if (message.type === 'navigate') {
+    console.log('Background: Received navigate request, dataUrl length:', message.dataUrl ? message.dataUrl.length : 0);
+    storedDataUrl = message.dataUrl; // Store dataUrl
+    chrome.tabs.update(sender.tab.id, {
+      url: chrome.runtime.getURL('preview.html')
+    }, () => {
+      if (chrome.runtime.lastError) {
+        console.error('Background: Navigation error:', chrome.runtime.lastError.message);
+        sendResponse({ error: chrome.runtime.lastError.message });
+      } else {
+        console.log('Background: Navigated to preview.html');
+        sendResponse({ success: true });
+      }
+    });
+    return true;
+  } else if (message.type === 'getDataUrl') {
+    console.log('Background: Received getDataUrl request, sending dataUrl length:', storedDataUrl ? storedDataUrl.length : 0);
+    sendResponse({ dataUrl: storedDataUrl });
+    return true;
   }
 });
