@@ -1,7 +1,9 @@
 let storedDataUrl = null;
+let sourceTabId = null;
 
 chrome.action.onClicked.addListener((tab) => {
-  console.log('Action clicked, injecting content.js');
+  console.log('Action clicked, injecting content.js into tab:', tab.id);
+  sourceTabId = tab.id;
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
     files: ['content.js']
@@ -22,7 +24,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     });
     return true;
   } else if (message.type === 'download') {
-    console.log('Background: Received download request');
+    console.log('Background: Received download request, filename:', message.filename);
     chrome.downloads.download({
       url: message.dataUrl,
       filename: message.filename,
@@ -40,14 +42,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.type === 'navigate') {
     console.log('Background: Received navigate request, dataUrl length:', message.dataUrl ? message.dataUrl.length : 0);
     storedDataUrl = message.dataUrl; // Store dataUrl
-    chrome.tabs.update(sender.tab.id, {
-      url: chrome.runtime.getURL('preview.html')
-    }, () => {
+    console.log('Background: Stored dataUrl length:', storedDataUrl ? storedDataUrl.length : 0);
+    chrome.tabs.create({
+      url: chrome.runtime.getURL('preview.html'),
+      active: true
+    }, (tab) => {
       if (chrome.runtime.lastError) {
         console.error('Background: Navigation error:', chrome.runtime.lastError.message);
         sendResponse({ error: chrome.runtime.lastError.message });
       } else {
-        console.log('Background: Navigated to preview.html');
+        console.log('Background: Opened preview.html in new tab:', tab.id);
         sendResponse({ success: true });
       }
     });

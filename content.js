@@ -154,9 +154,9 @@
     }
     console.log('Finished stitching');
 
-    // Navigate to preview page
+    // Navigate to preview page with default format (PNG)
     console.log('Sending dataUrl to background for navigation');
-    const finalDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+    const finalDataUrl = canvas.toDataURL('image/png');
     console.log('Final dataUrl length:', finalDataUrl.length);
     await new Promise((resolve, reject) => {
       chrome.runtime.sendMessage({

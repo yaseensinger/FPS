@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "Full Page Screenshot with URL",
   "version": "1.0",
-  "description": "Captures full webpage screenshot, includes URL and date, with PDF download preview.",
-  "permissions": ["activeTab", "scripting", "downloads"],
+  "description": "Captures full webpage screenshot, includes URL and date, with format and filename options.",
+  "permissions": ["activeTab", "scripting", "downloads", "tabs"],
   "action": {
     "default_icon": "icon.png"
   },
