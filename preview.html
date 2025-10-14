@@ -51,12 +51,12 @@
       outline: 2px solid #0078d4;
       outline-offset: 2px;
     }
-    #format, #quality {
+    #format, #quality, #pdfFormat {
       padding: 5px;
       border: 1px solid #333;
       border-radius: 4px;
     }
-    #format:focus, #quality:focus {
+    #format:focus, #quality:focus, #pdfFormat:focus {
       outline: 2px solid #0078d4;
       outline-offset: 2px;
     }
@@ -65,6 +65,20 @@
     }
     #qualityValue {
       margin-left: 10px;
+      font-weight: bold;
+    }
+    #multiPage, #pdfFormat {
+      margin-left: 10px;
+    }
+    #multiPage:focus, #pdfFormat:focus {
+      outline: 2px solid #0078d4;
+      outline-offset: 2px;
+    }
+    #errorMessage {
+      color: red;
+      margin: 10px;
+      font-size: 14px;
+      min-height: 20px;
       font-weight: bold;
     }
   </style>
@@ -83,7 +97,15 @@
     <span id="qualityValue" aria-live="polite">0.8</span>
     <label for="filename">Filename:</label>
     <input type="text" id="filename" value="screenshot" aria-label="Enter filename for download">
+    <label for="pdfFormat">PDF Image Format:</label>
+    <select id="pdfFormat" aria-label="Select image format for PDF">
+      <option value="png">PNG</option>
+      <option value="jpeg">JPEG</option>
+    </select>
+    <label for="multiPage">Split PDF into A4 pages:</label>
+    <input type="checkbox" id="multiPage" aria-label="Split PDF into multiple A4-sized pages">
   </div>
+  <div id="errorMessage" role="alert"></div>
   <img id="preview" src="" alt="Screenshot preview, loading may take a moment">
   <button id="downloadButton" aria-label="Download screenshot in selected format">Download</button>
 
